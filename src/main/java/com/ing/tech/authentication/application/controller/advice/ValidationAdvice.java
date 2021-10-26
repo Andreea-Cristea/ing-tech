@@ -27,6 +27,14 @@ public class ValidationAdvice extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+
+    log.error(ex.getMessage());
+
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
