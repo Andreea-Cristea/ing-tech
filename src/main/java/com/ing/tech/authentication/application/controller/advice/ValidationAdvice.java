@@ -1,5 +1,6 @@
 package com.ing.tech.authentication.application.controller.advice;
 
+import com.ing.tech.authentication.application.exceptions.AuthenticationBusinessException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.ConstraintViolationException;
@@ -19,7 +20,7 @@ public class ValidationAdvice extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(ConstraintViolationException.class)
   public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
-    List<Object> errors = new ArrayList();
+    List<Object> errors = new ArrayList<>();
     ex.getConstraintViolations().forEach(constraintViolation -> errors
         .add(constraintViolation.getPropertyPath() + ":" + constraintViolation.getMessage()));
     log.error(errors.toString());
@@ -27,18 +28,19 @@ public class ValidationAdvice extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+  @ExceptionHandler(AuthenticationBusinessException.class)
+  public ResponseEntity<Object> handleAuthenticationBusinessException(
+      AuthenticationBusinessException ex) {
+    String exceptionMessage = ex.getMessage();
+    log.error(exceptionMessage);
 
-    log.error(ex.getMessage());
-
-    return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(exceptionMessage, HttpStatus.BAD_REQUEST);
   }
 
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
-    List<Object> errors = new ArrayList();
+    List<Object> errors = new ArrayList<>();
     ex.getBindingResult().getFieldErrors().forEach(
         fieldError -> errors.add(fieldError.getField() + ":" + fieldError.getDefaultMessage()));
     log.error(errors.toString());
