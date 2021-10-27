@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class UserAuthenticationManager implements UserDetailsService {
   private final UserRepository userRepository;
 
   @Override
+  @Transactional
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
    Optional<User> userOptional = userRepository.findByEmail(email);
    if(!userOptional.isPresent()) {
@@ -30,7 +32,7 @@ public class UserAuthenticationManager implements UserDetailsService {
          USERNAME_NOT_FOUND_MESSAGE, email));
    }
     User user = userOptional.get();
-    org.springframework.security.core.userdetails.User preConfiguredSpringUser = null;
+    org.springframework.security.core.userdetails.User preConfiguredSpringUser;
 
     List<UserRole> userRoles = user.getAppUserRole();
     Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
