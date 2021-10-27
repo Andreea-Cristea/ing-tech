@@ -2,7 +2,7 @@ package com.ing.tech.authentication.application.controller;
 
 import com.ing.tech.authentication.application.model.LoginRequestDto;
 import com.ing.tech.authentication.application.model.RegistrationRequestDto;
-import com.ing.tech.authentication.application.service.UserOrganizer;
+import com.ing.tech.authentication.application.service.UserProcessor;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,19 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserAuthenticationController {
 
-  private final UserOrganizer userOrganizer;
+  private final UserProcessor userProcessor;
 
   @PostMapping(value = "registration")
   public ResponseEntity<RegistrationRequestDto> register(
       @Valid @RequestBody RegistrationRequestDto registrationRequestDto) {
-    userOrganizer.registerUser(registrationRequestDto);
+    userProcessor.registerUser(registrationRequestDto);
     return new ResponseEntity(HttpStatus.CREATED);
   }
 
   @GetMapping(value = "login")
   public ResponseEntity<LoginRequestDto> login(
       @Valid @RequestBody LoginRequestDto loginRequestDto) {
-    final String firstName = userOrganizer.loginUser(loginRequestDto);
+    final String firstName = userProcessor.loginUser(loginRequestDto);
     final String welcomeMessage = "Welcome " + firstName;
     return new ResponseEntity(welcomeMessage, HttpStatus.OK);
   }

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class UserOrganizer {
+public class UserProcessor {
 
   private final UserMapper userMapper;
   private final UserLoginDetailsMapper userLoginDetailsMapper;
