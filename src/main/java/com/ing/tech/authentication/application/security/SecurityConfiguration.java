@@ -1,36 +1,34 @@
 package com.ing.tech.authentication.application.security;
 
 import com.ing.tech.authentication.application.service.UserAuthenticationManager;
+import java.io.IOException;
+import javax.servlet.ServletException;
 import lombok.RequiredArgsConstructor;
-import org.h2.server.web.WebServlet;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.annotation.Bean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@EnableWebSecurity
+@Slf4j
+@Profile("dev")
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private final UserAuthenticationManager userAuthenticationManager;
   private final BCryptPasswordEncoder bCryptPAsswordEncoder;
 
-  @Bean
-  ServletRegistrationBean h2servletRegistration(){
-    ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
-    registrationBean.addUrlMappings("/console/*");
-    return registrationBean;
-  }
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
         .csrf().disable()
+        .headers().frameOptions().disable()
+        .and()
         .authorizeRequests()
         .antMatchers("/api/v1/registration")
         .permitAll()
@@ -38,11 +36,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/api/v1/login").permitAll()
         .and()
-        .authorizeRequests().antMatchers("/console/**").permitAll()
+        .authorizeRequests()
+        .antMatchers("/home")
+        .permitAll()
         .and()
         .authorizeRequests()
+        .antMatchers("/info").hasAnyAuthority("USER")
+        .and()
+        .authorizeRequests().antMatchers("/console/**").permitAll()
+        .and()
+        .logout(logout -> logout.logoutUrl("/api/v1/logout")
+        .addLogoutHandler((request, response, auth) -> {
+          try {
+            request.logout();
+            response.sendRedirect("/home");
+          } catch (ServletException | IOException e) {
+            log.error(e.getMessage());
+          }
+        }))
+        .authorizeRequests()
         .anyRequest()
-        .authenticated();
+        .authenticated().and()
+        .formLogin();
   }
 
   @Override
