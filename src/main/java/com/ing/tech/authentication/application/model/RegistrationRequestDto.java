@@ -21,6 +21,8 @@ public class RegistrationRequestDto {
   @NotNull(message = ValidationErrors.NULL_LAST_NAME_MESSAGE)
   private String lastName;
   @Email(message = ValidationErrors.INVALID_EMAIL_MESSAGE)
+  @NotNull(message = ValidationErrors.NULL_EMAIL_MESSAGE)
+  @NotEmpty(message = ValidationErrors.EMPTY_EMAIL_MESSAGE)
   private String email;
   @NotNull(message = ValidationErrors.NULL_PASSWORD_MESSAGE)
   @NotEmpty(message = ValidationErrors.EMPTY_PASSWORD_MESSAGE)

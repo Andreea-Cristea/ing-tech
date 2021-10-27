@@ -16,6 +16,8 @@ import lombok.ToString;
 public class LoginRequestDto {
 
   @Email
+  @NotNull(message = ValidationErrors.NULL_EMAIL_MESSAGE)
+  @NotEmpty(message = ValidationErrors.EMPTY_EMAIL_MESSAGE)
   private String email;
   @NotNull(message = ValidationErrors.NULL_PASSWORD_MESSAGE)
   @NotEmpty(message = ValidationErrors.EMPTY_PASSWORD_MESSAGE)

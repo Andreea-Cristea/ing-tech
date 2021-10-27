@@ -12,4 +12,6 @@ public class ValidationErrors {
   public static final String NULL_LAST_NAME_MESSAGE = "The last name field must not be null";
   public static final String NULL_PASSWORD_MESSAGE = "The password field must not be null";
   public static final String EMPTY_PASSWORD_MESSAGE = "The password field must not be empty";
+  public static final String NULL_EMAIL_MESSAGE = "The email field must not be null";
+  public static final String EMPTY_EMAIL_MESSAGE = "The email field must not be empty";
 }
