@@ -39,8 +39,6 @@ public class SecurityProductionConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/info").hasAnyAuthority("USER")
         .and()
-        .authorizeRequests().antMatchers("/console/**").permitAll()
-        .and()
         .logout(logout -> logout.logoutUrl("/api/v1/logout")
             .addLogoutHandler((request, response, auth) -> {
               try {
