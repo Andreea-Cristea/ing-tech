@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Slf4j
-@Profile("prod")
+@Profile({"prod", "test-security"})
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
