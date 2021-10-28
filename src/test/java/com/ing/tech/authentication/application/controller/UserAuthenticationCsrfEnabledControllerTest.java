@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ActiveProfiles(profiles = "test-security")
 @WebMvcTest(UserAuthenticationController.class)
-class UserAuthenticationControllerTest {
+class UserAuthenticationCsrfEnabledControllerTest {
 
   @Autowired
   private MockMvc mvc;
