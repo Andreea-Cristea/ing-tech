@@ -8,16 +8,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Slf4j
-@Profile("dev")
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Profile({"dev", "test-basic-security"})
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private final UserAuthenticationManager userAuthenticationManager;
@@ -40,20 +42,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/home")
         .permitAll()
         .and()
-        .authorizeRequests()
-        .antMatchers("/info").hasAnyAuthority("USER")
-        .and()
         .authorizeRequests().antMatchers("/console/**").permitAll()
         .and()
         .logout(logout -> logout.logoutUrl("/api/v1/logout")
-        .addLogoutHandler((request, response, auth) -> {
-          try {
-            request.logout();
-            response.sendRedirect("/home");
-          } catch (ServletException | IOException e) {
-            log.error(e.getMessage());
-          }
-        }))
+            .addLogoutHandler((request, response, auth) -> {
+              try {
+                request.logout();
+                response.sendRedirect("/home");
+              } catch (ServletException | IOException e) {
+                log.error(e.getMessage());
+              }
+            })
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID"))
         .authorizeRequests()
         .anyRequest()
         .authenticated().and()

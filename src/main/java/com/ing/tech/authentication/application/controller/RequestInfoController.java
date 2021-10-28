@@ -1,14 +1,15 @@
 package com.ing.tech.authentication.application.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class RequestInfoController {
 
-  @RequestMapping("/info")
-  public String greeting(Model model) {
+  @GetMapping("/info")
+  @PreAuthorize("hasAuthority('ROLE_USER')")
+  public String greeting() {
     return "info";
   }
 

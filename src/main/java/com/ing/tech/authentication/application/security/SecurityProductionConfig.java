@@ -8,16 +8,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Slf4j
-@Profile({"prod", "test-security"})
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Profile({"prod", "test-complete-security"})
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityProductionConfig extends WebSecurityConfigurerAdapter {
   private final UserAuthenticationManager userAuthenticationManager;
   private final BCryptPasswordEncoder bCryptPAsswordEncoder;
@@ -36,9 +38,6 @@ public class SecurityProductionConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/home")
         .permitAll()
         .and()
-        .authorizeRequests()
-        .antMatchers("/info").hasAnyAuthority("USER")
-        .and()
         .logout(logout -> logout.logoutUrl("/api/v1/logout")
             .addLogoutHandler((request, response, auth) -> {
               try {
@@ -47,7 +46,9 @@ public class SecurityProductionConfig extends WebSecurityConfigurerAdapter {
               } catch (ServletException | IOException e) {
                 log.error(e.getMessage());
               }
-            }))
+            })
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID"))
         .authorizeRequests()
         .anyRequest()
         .authenticated().and()
