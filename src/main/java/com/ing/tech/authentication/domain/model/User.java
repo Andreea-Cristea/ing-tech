@@ -22,7 +22,7 @@ public class User {
   private String firstName;
   private String lastName;
   @ElementCollection
-  private List<UserRole> appUserRole;
+  private List<UserRole> userRoles;
   private String email;
   private String password;
 

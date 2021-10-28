@@ -40,8 +40,8 @@ public class UserProcessor {
 
   private void populateUserWithSecurityDetails(User user) {
     List<UserRole> userRoles = new ArrayList<>();
-    userRoles.add(UserRole.USER);
-    user.setAppUserRole(userRoles);
+    userRoles.add(UserRole.ROLE_USER);
+    user.setUserRoles(userRoles);
     String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
     user.setPassword(encodedPassword);
   }

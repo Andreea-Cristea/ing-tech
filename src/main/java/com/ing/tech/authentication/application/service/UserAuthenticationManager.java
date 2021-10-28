@@ -34,10 +34,10 @@ public class UserAuthenticationManager implements UserDetailsService {
     User user = userOptional.get();
     org.springframework.security.core.userdetails.User preConfiguredSpringUser;
 
-    List<UserRole> userRoles = user.getAppUserRole();
+    List<UserRole> userRoles = user.getUserRoles();
     Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
     for (UserRole userRole : userRoles) {
-      grantedAuthorities.add(new SimpleGrantedAuthority(userRole.toString()));
+      grantedAuthorities.add(new SimpleGrantedAuthority(userRole.name()));
     }
 
     preConfiguredSpringUser = new org.springframework.security.core.userdetails.User(
