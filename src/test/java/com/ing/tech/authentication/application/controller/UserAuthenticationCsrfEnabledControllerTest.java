@@ -18,7 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@ActiveProfiles(profiles = "test-security")
+@ActiveProfiles(profiles = "test-complete-security")
 @WebMvcTest(UserAuthenticationController.class)
 class UserAuthenticationCsrfEnabledControllerTest {
 
