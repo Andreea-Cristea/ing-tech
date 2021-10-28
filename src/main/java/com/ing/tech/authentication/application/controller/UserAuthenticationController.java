@@ -31,7 +31,7 @@ public class UserAuthenticationController {
   public ResponseEntity<LoginRequestDto> login(
       @Valid @RequestBody LoginRequestDto loginRequestDto) {
     final String firstName = userProcessor.loginUser(loginRequestDto);
-    final String welcomeMessage = "Welcome " + firstName;
+    final String welcomeMessage = String.format("Welcome %s", firstName) ;
     return new ResponseEntity(welcomeMessage, HttpStatus.OK);
   }
 
